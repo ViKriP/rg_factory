@@ -23,7 +23,26 @@ class Factory
     end
 
     def class_new(*args, &block)
-  
+      Class.new do
+        attr_accessor(*args)
+
+        def initialize(*vars)
+          raise ArgumentError, "Expected #{args.count} argument(s)" if args.count != vars.count
+
+          args.each_index do |index|
+            instance_variable_set("@#{args[index]}", vars[index])
+          end
+        end
+
+        define_method :args do
+          args
+        end
+
+        def [](arg)
+          arg.is_a?(Integer) ? values[arg] : instance_variable_get("@#{arg}")
+        end
+
+      end
     end
 
   end
