@@ -11,15 +11,13 @@ puts joe
 puts joe.name    # => "Joe Smith"
 
 puts joe['name'] # => "Joe Smith"
-=begin
 puts joe[:name]  # => "Joe Smith"
 puts joe[0]      # => "Joe Smith"
 
-Customer = Struct.new(:name, :address) do
+Customer2 = Factory.new(:name, :address) do
   def greeting
-    "Hello #{name}!"
+    puts "Hello #{name}!"
   end
 end
 
-Customer.new('Dave', '123 Main').greeting # => "Hello Dave!"
-=end
+Customer2.new('Dave', '123 Main').greeting # => "Hello Dave!"

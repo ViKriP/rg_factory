@@ -38,10 +38,29 @@ class Factory
           args
         end
 
+        class_eval(&block) if block_given?
+
+        def ==(other)
+          self.class == other.class && self.values == other.values
+        end
+
+        def values
+          instance_variables.map { |arg| instance_variable_get(arg) }
+        end
+
+        def values_at(*indexes)
+          indexes.map { |index| values[index] }
+        end
+
         def [](arg)
           arg.is_a?(Integer) ? values[arg] : instance_variable_get("@#{arg}")
         end
 
+        def []=(arg, value)
+          instance_variable_set("@#{arg}", value)
+        end
+
+        alias_method :to_a, :values
       end
     end
 
