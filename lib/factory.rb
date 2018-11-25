@@ -40,6 +40,28 @@ class Factory
 
         class_eval(&block) if block_given?
 
+        def dig(*args)
+          args.reduce(to_h) do |hash, arg|
+            if !hash[arg].nil?
+              hash[arg]
+            else
+              return nil
+            end
+          end
+        end
+
+        def to_h
+          args.zip(values).to_h
+        end
+
+        def each(&block)
+          values.each(&block)
+        end
+
+        def each_pair(&pair)
+          to_h.each_pair(&pair)
+        end
+
         def ==(other)
           self.class == other.class && self.values == other.values
         end
