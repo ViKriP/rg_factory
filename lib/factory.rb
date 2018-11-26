@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 # * Here you must define your `Factory` class.
-# * Each instance of Factory could be stored into variable. The name of this variable is the name of created Class
+# * Each instance of Factory could be stored into variable.
+# *   The name of this variable is the name of created Class
 # * Arguments of creatable Factory instance are fields/attributes of created class
 # * The ability to add some methods to this class must be provided while creating a Factory
 # * We must have an ability to get/set the value of attribute like [0], ['attribute_name'], [:attribute_name]
@@ -42,11 +45,9 @@ class Factory
 
         def dig(*args)
           args.reduce(to_h) do |hash, arg|
-            if !hash[arg].nil?
-              hash[arg]
-            else
-              return nil
-            end
+            return nil if hash[arg].nil?
+
+            hash[arg]
           end
         end
 
@@ -62,8 +63,16 @@ class Factory
           to_h.each_pair(&pair)
         end
 
+        def length
+          args.size
+        end
+
+        def select(&block)
+          values.select(&block)
+        end
+
         def ==(other)
-          self.class == other.class && self.values == other.values
+          self.class == other.class && values == other.values
         end
 
         def values
@@ -83,8 +92,10 @@ class Factory
         end
 
         alias_method :to_a, :values
+        alias_method :size, :length
+        alias_method :members, :args
+        alias_method :eql?, :==
       end
     end
-
   end
 end
