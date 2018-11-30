@@ -29,7 +29,7 @@ class Factory
       Class.new do
         attr_accessor(*args)
 
-        def initialize(*vars)
+        define_method :initialize do |*vars|
           raise ArgumentError, "Expected #{args.count} argument(s)" if args.count != vars.count
 
           args.each_index do |index|
@@ -43,7 +43,7 @@ class Factory
 
         class_eval(&block) if block_given?
 
-        def dig(*args)
+        define_method :dig do |*args|
           args.reduce(to_h) do |hash, arg|
             return nil if hash[arg].nil?
 
@@ -51,43 +51,43 @@ class Factory
           end
         end
 
-        def to_h
+        define_method :to_h do
           args.zip(values).to_h
         end
 
-        def each(&block)
+        define_method :each do |&block|
           values.each(&block)
         end
 
-        def each_pair(&pair)
+        define_method :each_pair do |&pair|
           to_h.each_pair(&pair)
         end
 
-        def length
+        define_method :length do
           args.size
         end
 
-        def select(&block)
+        define_method :select do |&block|
           values.select(&block)
         end
 
-        def ==(other)
+        define_method :== do |other|
           self.class == other.class && values == other.values
         end
 
-        def values
+        define_method :values do
           instance_variables.map { |arg| instance_variable_get(arg) }
         end
 
-        def values_at(*indexes)
+        define_method :values_at do |*indexes|
           indexes.map { |index| values[index] }
         end
 
-        def [](arg)
+        define_method :[] do |arg|
           arg.is_a?(Integer) ? values[arg] : instance_variable_get("@#{arg}")
         end
 
-        def []=(arg, value)
+        define_method :[]= do |arg, value|
           instance_variable_set("@#{arg}", value)
         end
 
