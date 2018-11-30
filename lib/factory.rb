@@ -37,7 +37,7 @@ class Factory
           end
         end
 
-        define_method :args do
+        define_method :members do
           args
         end
 
@@ -93,7 +93,6 @@ class Factory
 
         alias_method :to_a, :values
         alias_method :size, :length
-        alias_method :members, :args
         alias_method :eql?, :==
       end
     end
